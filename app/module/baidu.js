@@ -7,7 +7,6 @@ const getBaiduNewsAjax = async ()=>{
        const reg = /{"data":{"cards":.*?"showScrollToTop":false}/g;
        const resJSOn = data.match(reg)
        const {data:{cards}} = JSON.parse(resJSOn[0])
-       console.clear()
        console.log('\033[40;33m本次更新百度：'+cards[0].content.length+'条新闻')
        console.log("")
        const typeMap = newTypeMap.find(type=>type.typeName==='热')

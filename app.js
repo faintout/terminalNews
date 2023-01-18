@@ -13,5 +13,6 @@ app.use(async (ctx, next) => {
 app.listen(9706, () => {
     console.log("News Start");
 });
+console.clear()
 getBaiduNewsAjax()
 getWeiboNewsAjax()
