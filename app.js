@@ -5,6 +5,7 @@ app.use(bodyParser());
 const {getBaiduNewsAjax} = require('./app/module/baidu.js')
 const {getWeiboNewsAjax} = require('./app/module/weibo.js')
 const {get08NewsListByPages} = require('./app/module/08tuan')
+const {getYaoHuoListByPages} = require('./app/module/yaohuo')
 app.use(async (ctx, next) => {
     ctx.set("Access-Control-Allow-Origin", "*");
     await next();
@@ -18,3 +19,4 @@ console.clear()
 getBaiduNewsAjax()
 getWeiboNewsAjax()
 get08NewsListByPages(3)
+getYaoHuoListByPages(5)
