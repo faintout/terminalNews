@@ -19,6 +19,22 @@ axios.interceptors.request.use(
         return Promise.reject(error)
     }
 )
+axios.interceptors.response.use(
+  (response) => {
+      //内部
+      if (response.status === 200 ) {
+          return Promise.resolve(response);
+      } else {
+          console.log('当前接口获取失败： '+response.config.url);
+          return Promise.reject(response)
+      }
+  },
+  (error) => {
+      //外部
+      console.log('当前接口: '+error.config.url+' 获取失败：'+error.toString());
+      return Promise.reject(error);
+  }
+)
 module.exports ={
     axios
 }
