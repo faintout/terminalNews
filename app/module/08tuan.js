@@ -3,17 +3,21 @@ const cheerio = require('cheerio')
 const {setTextColor } = require('../utils.js')
 const baseUrl = 'http://www.0818tuan.com/';
 const get08NewsListByPages = async (pages)=>{
-    var allList = []
-    for(let i=0;i<pages;i++){
-        allList = [...allList,...await get08NewsByPage(i)]
+    try{
+        var allList = []
+        for(let i=0;i<pages;i++){
+            allList = [...allList,...await get08NewsByPage(i)]
+        }
+        console.log(setTextColor(`本次更新08团线报${allList.length}条`,'yellow'))
+        allList.map((item,i)=>{
+            const titleRow = setTextColor((i+1)+'.','white')+setTextColor(item.times+' ','magenta') +setTextColor(item.title+' ','green')
+            console.log(titleRow)
+            console.log(setTextColor(item.url+' ','black'))
+            console.log();
+        })
+    }catch(e){
+        console.log('获取08tuan内容失败 :' + e.toString());
     }
-    console.log(setTextColor(`本次更新08团线报${allList.length}条`,'yellow'))
-    allList.map((item,i)=>{
-        const titleRow = setTextColor((i+1)+'.','white')+setTextColor(item.times+' ','magenta') +setTextColor(item.title+' ','green')
-        console.log(titleRow)
-        console.log(setTextColor(item.url+' ','black'))
-        console.log();
-    })
 }
 //获取08团列表数据by Page 
 const get08NewsByPage = (page)=>{

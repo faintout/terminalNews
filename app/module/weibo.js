@@ -17,8 +17,7 @@ const getWeiboNewsAjax = async () => {
         })
         return Promise.resolve()
     } catch (e) {
-        console.log(e);
-        console.log('get news error :' + e.toString());
+        console.log('获取微博内容失败 :' + e.toString());
     }
 }
 module.exports = {

@@ -2,26 +2,31 @@ const { axios } = require('./../api')
 const cheerio = require('cheerio')
 const {setTextColor } = require('../utils.js')
 const baseUrl = 'https://www.yaohuo.me/';
-const cookie = 'GUID=2563660410175686; _gid=GA1.2.730229516.1683166676; sidwww=0D7AADFD732B640_602_01297_13690_61001-2; ASP.NET_SessionId=odtauv454oyxfk45azd1vq45; _gat_gtag_UA_88858350_1=1; _ga=GA1.1.1291502645.1683166676; _ga_DWD6C2XC51=GS1.1.1683351420.14.1.1683351880.0.0.0'
+const cookie = 'ASP.NET_SessionId=qngljpmoon21zbuwyur10cfi; GUID=4aea6a0616460717; GET11292=; sidwww=0D7AADFD732B640_602_01292_17320_41001-2'
 const getYaoHuoListByPages = async (pages)=>{
-    let allPromiseList = []
-    for(let i=0;i<pages;i++){
-        allPromiseList.push(getListByPage(i)) 
-    }
-    let allList = await Promise.all(allPromiseList)
-    if(allList[0].data.includes('身份失效了')){
-        console.log(setTextColor('yaohuo：cookie失效,请重新设置！'+'','yellow'))
+    try{
+        let allPromiseList = []
+        for(let i=0;i<pages;i++){
+            allPromiseList.push(getListByPage(i)) 
+        }
+        let allList = await Promise.all(allPromiseList)
+        if(allList[0]?.data?.includes('身份失效了')){
+            console.log(setTextColor('yaohuo：cookie失效,请重新设置！'+'','yellow'))
+            return
+        }
+        allList = allList.map(list=>makeHtmlToJson(list.data)).flat(Infinity)
+        console.log(setTextColor(`本次更新yaohuo${allList.length}条`,'yellow'))
+        console.log("")
+        allList.map((item,i)=>{
+            const titleRow = setTextColor((i+1)+'.','white') + setTextColor(item.iconNameStr+'','yellow')+ setTextColor(item.title+' ','green') + setTextColor(item.times+'','magenta')
+            console.log(titleRow)
+            console.log(setTextColor(item.url+' ','black'))
+            console.log();
+        })
+    }catch(e){
+        console.log('yaohuo获取内容失败:',e.toString());
         return
     }
-    allList = allList.map(list=>makeHtmlToJson(list.data)).flat(Infinity)
-    console.log(setTextColor(`本次更新yaohuo${allList.length}条`,'yellow'))
-    console.log("")
-    allList.map((item,i)=>{
-        const titleRow = setTextColor((i+1)+'.','white') + setTextColor(item.iconNameStr+'','yellow')+ setTextColor(item.title+' ','green') + setTextColor(item.times+'','magenta')
-        console.log(titleRow)
-        console.log(setTextColor(item.url+' ','black'))
-        console.log();
-    })
 }
 //获取列表数据by Page 
 const getListByPage = (page)=>{

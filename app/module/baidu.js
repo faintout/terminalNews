@@ -18,8 +18,7 @@ const getBaiduNewsAjax = async ()=>{
            console.log("")
        })
     }catch(e){
-        console.log(e);
-        console.log('get news error :'+e.toString());
+        console.log('获取百度内容失败 :' + e.toString());
     }
 }
 
