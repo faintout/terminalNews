@@ -16,7 +16,12 @@ app.listen(9706, () => {
     console.log("News Start");
 });
 console.clear()
-getBaiduNewsAjax()
-getWeiboNewsAjax()
-get08NewsListByPages(3)
-getYaoHuoListByPages(5)
+const promiseGetList = [
+    getBaiduNewsAjax(),
+    getWeiboNewsAjax(),
+    get08NewsListByPages(3),
+    getYaoHuoListByPages(5),
+]
+Promise.all(promiseGetList).finally(()=>{
+            console.log('信息获取结束！');
+    })
