@@ -6,7 +6,7 @@ const cookie = 'ASP.NET_SessionId=qngljpmoon21zbuwyur10cfi; GUID=4aea6a061646071
 const getYaoHuoListByPages = async (pages)=>{
     try{
         let allPromiseList = []
-        for(let i=0;i<pages;i++){
+        for(let i=1;i<pages;i++){
             allPromiseList.push(getListByPage(i)) 
         }
         let allList = await Promise.all(allPromiseList)
