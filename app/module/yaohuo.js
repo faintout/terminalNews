@@ -10,13 +10,17 @@ const getYaoHuoListByPages = async (pages)=>{
             allPromiseList.push(getListByPage(i)) 
         }
         let allList = await Promise.all(allPromiseList)
-        if(allList[0]?.data?.includes('身份失效了')){
+        if(allList.toString().includes('身份失效了')){
             console.log(setTextColor('yaohuo：cookie失效,请重新设置！'+'','yellow'))
             return
         }
         allList = allList.map(list=>makeHtmlToJson(list.data)).flat(Infinity)
         console.log(setTextColor(`本次更新yaohuo${allList.length}条`,'yellow'))
         console.log("")
+        if(!allList.length){
+            console.log(setTextColor('yaohuo：获取0条，可能是cookie失效！'+'','yellow'))
+            return
+        }
         allList.map((item,i)=>{
             const titleRow = setTextColor((i+1)+'.','white') + setTextColor(item.iconNameStr+'','yellow')+ setTextColor(item.title+' ','green') + setTextColor(item.times+'','magenta')
             console.log(titleRow)
