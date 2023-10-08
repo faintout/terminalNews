@@ -1,6 +1,7 @@
 
-const { newTypeMap } = require('./../utils')
+const { newTypeMap,Result } = require('./../utils')
 const { axios } = require('./../api')
+let resData,success,msg
 //获取百度新闻接口数据
 const getWeiboNewsAjax = async () => {
     try {
@@ -15,11 +16,24 @@ const getWeiboNewsAjax = async () => {
             console.log('\033[40;30m' + 'https://s.weibo.com/weibo?q=%23' + card.word.replace(' ', '%20') + '%23')
             console.log("")
         })
-        return Promise.resolve()
+        resData = band_list.map(card=>{
+                card.url = 'https://s.weibo.com/weibo?q=%23' + card.word.replace(' ', '%20') + '%23'
+                return card
+            })
+        msg = ''
+        success = true
     } catch (e) {
         console.log('获取微博内容失败 :' + e.toString());
+        success = false
+        resData = []
+        msg = e.toString()
     }
+    return new Result({
+        data:resData,
+        success,
+        msg
+    })
 }
 module.exports = {
-    getWeiboNewsAjax
+    getWeiboNewsAjax,
 };

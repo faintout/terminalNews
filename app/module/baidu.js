@@ -1,5 +1,6 @@
 const {axios }  = require('./../api')
-const {newTypeMap } = require('./../utils')
+const {newTypeMap,Result } = require('./../utils')
+let resData,success,msg
 //获取百度新闻接口数据
 const getBaiduNewsAjax = async ()=>{
     try{
@@ -17,9 +18,20 @@ const getBaiduNewsAjax = async ()=>{
            console.log(card.url)
            console.log("")
        })
+       resData = cards[0].content
+       msg = ''
+       success = true
     }catch(e){
         console.log('获取百度内容失败 :' + e.toString());
+        resData = []
+        success = false
+        msg = e.toString()
     }
+    return new Result({
+        data:resData,
+        success,
+        msg
+    })
 }
 
 module.exports = {

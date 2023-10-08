@@ -47,7 +47,16 @@ const consoleColorMap = {
 const setTextColor = (text,color)=>{
     return consoleColorMap[color||'white']+text
 }
+class Result{
+    constructor({ code = 200, msg = "", data = {}, success = true  }){
+        this.code = code;
+        this.msg = msg;
+        this.success = success;
+        this.data = data;
+    }
+}
 module.exports ={
     newTypeMap,
-    setTextColor
+    setTextColor,
+    Result
 }

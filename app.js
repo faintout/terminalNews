@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const app = new Koa();
 const bodyParser = require("koa-bodyparser");
+const router = require('./app/router/index.js');
 app.use(bodyParser());
 const {getBaiduNewsAjax} = require('./app/module/baidu.js')
 const {getWeiboNewsAjax} = require('./app/module/weibo.js')
@@ -11,8 +12,8 @@ app.use(async (ctx, next) => {
     await next();
 })
 
-
-app.listen(9706, () => {
+app.use(router.routes());
+app.listen(8090, () => {
     console.log("News Start");
 });
 console.clear()

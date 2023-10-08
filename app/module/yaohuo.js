@@ -1,25 +1,26 @@
 const { axios } = require('./../api')
 const cheerio = require('cheerio')
-const {setTextColor } = require('../utils.js')
+const {setTextColor,Result } = require('../utils.js')
+let data,success,msg
 const baseUrl = 'https://www.yaohuo.me/';
 const cookie = 'ASP.NET_SessionId=qngljpmoon21zbuwyur10cfi; GUID=4aea6a0616460717; GET11292=; sidwww=0D7AADFD732B640_602_01292_17320_41001-2'
 const getYaoHuoListByPages = async (pages)=>{
     try{
         let allPromiseList = []
-        for(let i=1;i<pages;i++){
-            allPromiseList.push(getListByPage(i)) 
+        for(let i=0;i<pages;i++){
+            allPromiseList.push(getListByPage(i+1)) 
         }
         let allList = await Promise.all(allPromiseList)
         if(allList.toString().includes('身份失效了')){
             console.log(setTextColor('yaohuo：cookie失效,请重新设置！'+'','yellow'))
-            return
+            throw new Error('yaohuo：cookie失效,请重新设置')
         }
         allList = allList.map(list=>makeHtmlToJson(list.data)).flat(Infinity)
         console.log(setTextColor(`本次更新yaohuo${allList.length}条`,'yellow'))
         console.log("")
         if(!allList.length){
             console.log(setTextColor('yaohuo：获取0条，可能是cookie失效！'+'','yellow'))
-            return
+            throw new Error('yaohuo：获取0条，可能是cookie失效！')
         }
         allList.map((item,i)=>{
             const titleRow = setTextColor((i+1)+'.','white') + setTextColor(item.iconNameStr+'','yellow')+ setTextColor(item.title+' ','green') + setTextColor(item.times+'','magenta')
@@ -27,10 +28,20 @@ const getYaoHuoListByPages = async (pages)=>{
             console.log(setTextColor(item.url+' ','black'))
             console.log();
         })
+        data = allList
+        msg = ''
+        success = true
     }catch(e){
         console.log('yaohuo获取内容失败:',e.toString());
-        return
+        success = false
+        data = []
+        msg = e.toString()
     }
+    return new Result({
+        data,
+        success,
+        msg
+    })
 }
 //获取列表数据by Page 
 const getListByPage = (page)=>{

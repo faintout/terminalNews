@@ -1,7 +1,8 @@
 const { axios } = require('./../api')
 const cheerio = require('cheerio')
-const {setTextColor } = require('../utils.js')
+const {setTextColor,Result } = require('../utils.js')
 const baseUrl = 'http://www.0818tuan.com/';
+let data,success,msg
 const get08NewsListByPages = async (pages)=>{
     try{
         var allList = []
@@ -15,9 +16,20 @@ const get08NewsListByPages = async (pages)=>{
             console.log(setTextColor(item.url+' ','black'))
             console.log();
         })
+        data = allList
+        msg = ''
+        success = true
     }catch(e){
         console.log('获取08tuan内容失败 :' + e.toString());
+        success = false
+        data = []
+        msg = e.toString()
     }
+    return new Result({
+        data,
+        success,
+        msg
+    })
 }
 //获取08团列表数据by Page 
 const get08NewsByPage = (page)=>{
