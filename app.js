@@ -7,6 +7,7 @@ const {getBaiduNewsAjax} = require('./app/module/baidu.js')
 const {getWeiboNewsAjax} = require('./app/module/weibo.js')
 const {get08NewsListByPages} = require('./app/module/08tuan')
 const {getYaoHuoListByPages} = require('./app/module/yaohuo')
+const {getDoubanBuyListByPages} = require('./app/module/doubanBuy')
 app.use(async (ctx, next) => {
     ctx.set("Access-Control-Allow-Origin", "*");
     await next();
@@ -22,6 +23,7 @@ const promiseGetList = [
     getWeiboNewsAjax(),
     get08NewsListByPages(3),
     getYaoHuoListByPages(5),
+    getDoubanBuyListByPages(1),
 ]
 Promise.all(promiseGetList).finally(()=>{
             console.log('信息获取结束！');
