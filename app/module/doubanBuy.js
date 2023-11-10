@@ -35,7 +35,6 @@ const getDoubanBuyListByPages = async (pages)=>{
 const getDoubanBuyByPage = (page)=>{
     return new Promise(async res=>{
         const { data } =  await axios.get(`${baseUrl}/${page===1?'':page}`)
-        console.log('data',data);
         res(makeHtmlToJson(data))
     })
 }
