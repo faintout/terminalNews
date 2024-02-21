@@ -1,15 +1,55 @@
 const { axios } = require('./../api')
 const cheerio = require('cheerio')
-const {setTextColor,Result } = require('../utils.js')
+const {setTextColor,Result } = require('../utils.js');
 let data,success,msg
 const baseUrl = 'https://www.yaohuo.me/';
-const cookie = 'ASP.NET_SessionId=qngljpmoon21zbuwyur10cfi; GUID=4aea6a0616460717; GET11292=; sidwww=0D7AADFD732B640_602_01292_17320_41001-2'
-const getYaoHuoListByPages = async (pages)=>{
+const cookie = 'GUID=42548d1809125600; _ga=GA1.1.618367009.1683364117; _ga_DWD6C2XC51=GS1.1.1694772000.379.1.1694775490.60.0.0; _clck=zk1x4t%7C2%7Cfh5%7C0%7C1412; sidyaohuo=0D7AADFD732B640_602_01292_15020_11001-2-0-0-0-0'
+const getYaoHuoAllListByPages = async(pages)=>{
     try{
+        validate(pages)
         let allPromiseList = []
         for(let i=0;i<pages;i++){
             allPromiseList.push(getListByPage(i+1)) 
         }
+        return makeData(allPromiseList)
+    }catch(error){
+        console.log('yaohuo获取内容失败:',error.toString());
+        return new Result({
+            data: [],
+            success: false,
+            msg: error.message
+        });
+    }
+}
+const validate = async (pages) => {
+    if (!pages) {
+        throw new Error('yaohuo：请传入页数');
+    }
+    if (isNaN(pages)) {
+        throw new Error('yaohuo：页数必须是数字');
+    }
+}
+
+const getYaoHuoListByPage = async(page)=>{
+    try{
+        await validate(page)
+        let allPromiseList = []
+        allPromiseList.push(getListByPage(page)) 
+        return makeData(allPromiseList)
+    }catch(error){
+        console.log('yaohuo获取内容失败:',error.toString());
+        return new Result({
+            data: [],
+            success: false,
+            msg: error.message
+        });
+    }
+}
+
+
+//组装结构
+const makeData = async(allPromiseList)=>{
+    try{
         let allList = await Promise.all(allPromiseList)
         if(allList.toString().includes('身份失效了')){
             console.log(setTextColor('yaohuo：cookie失效,请重新设置！'+'','yellow'))
@@ -56,7 +96,7 @@ const makeHtmlToJson = (html)=>{
         list.each(function(){
             const title = $('.topic-link',this).eq(0).text()
             const times = $(this).children('.right').text()
-            const url = baseUrl + $('.topic-link',this).eq(0).attr('href')
+            const url = baseUrl.slice(0,-1) + $('.topic-link',this).eq(0).attr('href')
             let iconNameStr= ''
             $(this).children('img').each((index, element) => {
               const alt = $(element).attr('alt');
@@ -77,5 +117,6 @@ const makeHtmlToJson = (html)=>{
     }
 }
 module.exports = {
-    getYaoHuoListByPages
+    getYaoHuoAllListByPages,
+    getYaoHuoListByPage
 }

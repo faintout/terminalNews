@@ -3,7 +3,7 @@ const router = new Router();
 const {getBaiduNewsAjax} = require('../module/baidu.js')
 const {getWeiboNewsAjax} = require('../module/weibo.js')
 const {get08NewsListByPages} = require('../module/08tuan')
-const {getYaoHuoListByPages} = require('../module/yaohuo')
+const {getYaoHuoAllListByPages,getYaoHuoListByPage} = require('../module/yaohuo')
 const {getDoubanBuyListByPages} = require('../module/doubanBuy.js')
 
 router.get("/", (ctx, next) => {
@@ -21,9 +21,13 @@ router.get('/08News/:page',async(ctx,next)=>{
     let page = ctx.params.page;
     ctx.body = await get08NewsListByPages(page||3)
 })
+router.get('/yaohuoAll/:page',async(ctx,next)=>{
+    let page = ctx.params.page;
+    ctx.body = await getYaoHuoAllListByPages(page||5)
+})
 router.get('/yaohuo/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getYaoHuoListByPages(page||5)
+    ctx.body = await getYaoHuoListByPage(page||1)
 })
 router.get('/doubanBuy/:page',async(ctx,next)=>{
     let page = ctx.params.page;
