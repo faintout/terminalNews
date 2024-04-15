@@ -6,7 +6,7 @@ const baseUrl = 'https://www.yaohuo.me/';
 const cookie = 'GUID=42548d1809125600; _ga=GA1.1.618367009.1683364117; _ga_DWD6C2XC51=GS1.1.1694772000.379.1.1694775490.60.0.0; _clck=zk1x4t%7C2%7Cfh5%7C0%7C1412; sidyaohuo=0D7AADFD732B640_602_01292_15020_11001-2-0-0-0-0'
 const getYaoHuoAllListByPages = async(pages)=>{
     try{
-        validate(pages)
+        await validate(pages)
         let allPromiseList = []
         for(let i=0;i<pages;i++){
             allPromiseList.push(getListByPage(i+1)) 

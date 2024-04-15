@@ -1,6 +1,6 @@
 const Router = require("koa-router");
 const router = new Router();
-const {getBaiduNewsAjax} = require('../module/baidu.js')
+const {getBaiduNewsAjax,getBaiduNewsRecommendedAllByPage} = require('../module/baidu.js')
 const {getWeiboNewsAjax} = require('../module/weibo.js')
 const {get08NewsListByPages} = require('../module/08tuan')
 const {getYaoHuoAllListByPages,getYaoHuoListByPage} = require('../module/yaohuo')
@@ -14,23 +14,27 @@ router.get("/", (ctx, next) => {
 router.get('/baiduNews',async(ctx,next)=>{
     ctx.body = await getBaiduNewsAjax()
 })
+router.get('/baiduRecommendedNewsByPages/:page',async(ctx,next)=>{
+    let page = ctx.params.page;
+    ctx.body = await getBaiduNewsRecommendedAllByPage(page??5)
+})
 router.get('/weiboNews',async(ctx,next)=>{
     ctx.body = await getWeiboNewsAjax()
 })
 router.get('/08News/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await get08NewsListByPages(page||3)
+    ctx.body = await get08NewsListByPages(page??3)
 })
 router.get('/yaohuoAll/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getYaoHuoAllListByPages(page||5)
+    ctx.body = await getYaoHuoAllListByPages(page??5)
 })
 router.get('/yaohuo/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getYaoHuoListByPage(page||1)
+    ctx.body = await getYaoHuoListByPage(page??1)
 })
 router.get('/doubanBuy/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getDoubanBuyListByPages(page||3)
+    ctx.body = await getDoubanBuyListByPages(page??3)
 })
 module.exports = router;
