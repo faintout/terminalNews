@@ -10,6 +10,8 @@ router.get("/", (ctx, next) => {
   ctx.body = "<h3>服务器请求成功</h3>";
   ctx.body += "<h3>接口地址如下</h3> <br/>";
   ctx.body+=router.stack.map(stack=>`<a href="${stack.path}" target="_blank">${stack.path}</a>`).join('<br/>')
+// 样式调整为黑色背景
+  ctx.body += "<style>body{background-color: #282828;color: yellowgreen;} a{color: dodgerblue;}</style>";
 });
 router.get('/baiduNews',async(ctx,next)=>{
     ctx.body = await getBaiduNewsAjax()
@@ -31,7 +33,7 @@ router.get('/yaohuoAll/:page',async(ctx,next)=>{
 })
 router.get('/yaohuo/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getYaoHuoListByPage(page??1)
+    ctx.body = await getYaoHuoListByPage(page??1,ctx)
 })
 router.get('/doubanBuy/:page',async(ctx,next)=>{
     let page = ctx.params.page;

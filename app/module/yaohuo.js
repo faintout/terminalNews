@@ -1,9 +1,9 @@
 const { axios } = require('./../api')
 const cheerio = require('cheerio')
-const {setTextColor,Result } = require('../utils.js');
+const {setTextColor,Result,sleep,random,getCurrDay } = require('../utils.js');
 let data,success,msg
-const baseUrl = 'https://www.yaohuo.me/';
-const cookie = 'GUID=42548d1809125600; _ga=GA1.1.618367009.1683364117; _ga_DWD6C2XC51=GS1.1.1694772000.379.1.1694775490.60.0.0; _clck=zk1x4t%7C2%7Cfh5%7C0%7C1412; sidyaohuo=0D7AADFD732B640_602_01292_15020_11001-2-0-0-0-0'
+const baseUrl = 'https://yaohuo.me/';
+const cookie = '_ga=GA1.1.618367009.1683364117; _ga_DWD6C2XC51=GS1.1.1694772000.379.1.1694775490.60.0.0; _clck=zk1x4t%7C2%7Cfh5%7C0%7C1412; GUID=4750332010104034; sidyaohuo=0D7AADFD732B640_602_01297_13620_61001-2-0-0-0-0'
 const getYaoHuoAllListByPages = async(pages)=>{
     try{
         await validate(pages)
@@ -21,6 +21,13 @@ const getYaoHuoAllListByPages = async(pages)=>{
         });
     }
 }
+//刷新在线时常
+const refreshOnLineTime = async()=>{
+    await getListByPage(1)
+    console.log(`${getCurrDay()}  刷新时长成功！`)
+    await sleep(random(1000*60,1000*60*3))
+    refreshOnLineTime()
+}
 const validate = async (pages) => {
     if (!pages) {
         throw new Error('yaohuo：请传入页数');
@@ -30,12 +37,12 @@ const validate = async (pages) => {
     }
 }
 
-const getYaoHuoListByPage = async(page)=>{
+const getYaoHuoListByPages = async(page,ctx)=>{
     try{
         await validate(page)
         let allPromiseList = []
         allPromiseList.push(getListByPage(page)) 
-        return makeData(allPromiseList)
+        return makeData(allPromiseList,page,ctx)
     }catch(error){
         console.log('yaohuo获取内容失败:',error.toString());
         return new Result({
@@ -48,7 +55,7 @@ const getYaoHuoListByPage = async(page)=>{
 
 
 //组装结构
-const makeData = async(allPromiseList)=>{
+const makeData = async(allPromiseList,page,ctx)=>{
     try{
         let allList = await Promise.all(allPromiseList)
         if(allList.toString().includes('身份失效了')){
@@ -68,7 +75,7 @@ const makeData = async(allPromiseList)=>{
             console.log(setTextColor(item.url+' ','black'))
             console.log();
         })
-        data = allList
+        data = allList.length?[...allList,{title:'下一页',url:`http://${ctx.request.host}/yaohuo/${Number(page)+1}`}]:[]
         msg = ''
         success = true
     }catch(e){
@@ -85,7 +92,12 @@ const makeData = async(allPromiseList)=>{
 }
 //获取列表数据by Page 
 const getListByPage = (page)=>{
-    return axios.get(`${baseUrl}/bbs/book_list.aspx?action=new&siteid=1000&classid=0&getTotal=2023&page=${page}`,{ headers: {cookie}})
+    try{
+        return axios.get(`${baseUrl}/bbs/book_list.aspx?action=new&siteid=1000&classid=0&getTotal=2023&page=${page}`,{ headers: {cookie}})
+    }catch(e){
+        console.log(`获取失败${e}`);
+        // throw new Error(`获取失败${e}`)
+    }
 }
 //拼接html结构toJson
 const makeHtmlToJson = (html)=>{
@@ -116,7 +128,8 @@ const makeHtmlToJson = (html)=>{
         console.log('e',e);
     }
 }
+// refreshOnLineTime()
 module.exports = {
     getYaoHuoAllListByPages,
-    getYaoHuoListByPage
+    getYaoHuoListByPages
 }

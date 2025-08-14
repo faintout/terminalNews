@@ -18,7 +18,10 @@ const newTypeMap = [
         typeColor:'\x1B[34m'
     },
 ]
-
+//延时函数
+const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time))
+//随机生成1-300秒的延迟
+const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 const consoleColorMap = {
     'bright'    : '\x1B[1m', // 亮色
     'grey'      : '\x1B[2m', // 灰色
@@ -55,8 +58,25 @@ class Result{
         this.data = data;
     }
 }
+// 获取当前日期
+const getCurrDay = (targetTime) => {
+    // 创建一个新的 Date 对象，它将包含当前的日期和时间
+    const currentDate = targetTime?new Date(targetTime):new Date();
+    // 获取当前日期的年、月、日
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，因此需要加 1
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+    const milliseconds = String(currentDate.getMilliseconds());
+
+    // 将年、月、日拼接成所需格式的日期字符串
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`;
+    return formattedDate
+}
 module.exports ={
     newTypeMap,
     setTextColor,
-    Result
+    Result,sleep,random,getCurrDay
 }

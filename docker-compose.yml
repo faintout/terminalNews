@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  terminal-news:
+    build: .
+    container_name: terminal-news-app
+    ports:
+      - "8090:8090"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    volumes:
+      # 可选：如果需要持久化数据，可以添加卷挂载
+      # - ./data:/app/data
+    networks:
+      - terminal-news-network
+
+networks:
+  terminal-news-network:
+    driver: bridge 
