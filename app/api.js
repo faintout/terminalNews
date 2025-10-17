@@ -1,3 +1,5 @@
+// 强制使用 Node.js 内置的 HTTP 模块，避免 undici 兼容性问题
+process.env.USE_NODE_HTTP = 'true';
 
 const instance = require("axios");
 const axios = instance.create({});

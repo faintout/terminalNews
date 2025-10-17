@@ -18,25 +18,25 @@ router.get('/baiduNews',async(ctx,next)=>{
 })
 router.get('/baiduRecommendedNewsByPages/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getBaiduNewsRecommendedAllByPage(page??5)
+    ctx.body = await getBaiduNewsRecommendedAllByPage(isNaN(page) ? 5 : page)
 })
 router.get('/weiboNews',async(ctx,next)=>{
     ctx.body = await getWeiboNewsAjax()
 })
 router.get('/08News/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await get08NewsListByPages(page??3)
+    ctx.body = await get08NewsListByPages(isNaN(page) ? 5 : page)
 })
 router.get('/yaohuoAll/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getYaoHuoAllListByPages(page??5)
+    ctx.body = await getYaoHuoAllListByPages(isNaN(page) ? 5 : page)
 })
 router.get('/yaohuo/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getYaoHuoListByPage(page??1,ctx)
+    ctx.body = await getYaoHuoListByPage(isNaN(page) ? 5 : page,ctx)
 })
 router.get('/doubanBuy/:page',async(ctx,next)=>{
     let page = ctx.params.page;
-    ctx.body = await getDoubanBuyListByPages(page??3)
+    ctx.body = await getDoubanBuyListByPages(isNaN(page) ? 5 : page)
 })
 module.exports = router;
